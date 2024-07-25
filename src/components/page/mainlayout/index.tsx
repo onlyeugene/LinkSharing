@@ -6,6 +6,8 @@ import outerShape from "../../../../public/assets/Subtract.svg";
 import github from "../../../../public/assets/github2.svg";
 import youtube from "../../../../public/assets/youtube2.svg";
 import linkedin from "../../../../public/assets/linkedin2.svg";
+import facebook from "../../../../public/assets/facebook.svg";
+import facebook2 from "../../../../public/assets/facebook2.svg";
 import arrow from "../../../../public/assets/arrow.svg";
 
 interface MainLayoutProps {
@@ -20,6 +22,7 @@ const platformImages: Record<string, string> = {
   GitHub: github,
   LinkedIn: linkedin,
   YouTube: youtube,
+  Facebook: facebook,
 };
 
 const MainLayout: FC<MainLayoutProps> = ({
@@ -87,6 +90,9 @@ const MainLayout: FC<MainLayoutProps> = ({
                   : validLinks[index] &&
                     validLinks[index].platform === "LinkedIn"
                   ? "bg-[#2D68FF]"
+                  : validLinks[index] &&
+                    validLinks[index].platform === "Facebook"
+                  ? "bg-[#2D68FF] "
                   : validLinks[index] && validLinks[index].platform === "YouTube"
                   ? "bg-red"
                   : "bg-dark"

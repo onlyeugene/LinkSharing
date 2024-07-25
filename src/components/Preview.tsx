@@ -29,7 +29,7 @@ const platformImages: Record<string, string> = {
 };
 
 const Preview: FC<PreviewProps> = ({ links, profilePicture, email }) => {
-  const [user] = useAuthState(auth);
+  const [user, loading, error] = useAuthState(auth);
   const [profileData, setProfileData] = useState<{
     firstName?: string;
     lastName?: string;
@@ -49,6 +49,31 @@ const Preview: FC<PreviewProps> = ({ links, profilePicture, email }) => {
       fetchProfile();
     }
   }, [user]);
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin border-[2px] rounded-full h-20 w-20 border-[#633CFF] relative"> <span className='rounded-full absolute top-0 right-0 border w-5 h-5 bg-black border-black'></span></div>
+      </div>
+    );
+  }
+
+  if (error || !user) {
+    return (
+      <div className="text-center flex flex-col items-center justify-center min-h-screen">
+        <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin border-[2px] rounded-full h-20 w-20 border-[#633CFF] relative"> <span className='rounded-full absolute top-0 right-0 border w-5 h-5 bg-black border-black'></span></div>
+      </div>
+
+        <p className="text-gray-700 mt-4">Please log in to continue.</p>
+
+        <Link href="/login" legacyBehavior>
+          <p className="text-[#b32828] underline mt-2 font-medium">
+            Go to Login Page
+          </p>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="relative bg-white sm:bg-primary min-h-screen w-full">
@@ -89,7 +114,7 @@ const Preview: FC<PreviewProps> = ({ links, profilePicture, email }) => {
                   </div>
                 )}
                 {email && (
-                  <div className="text-dark-gray text-sm mt-2">{email}</div>
+                  <div className="text-dark-gray text-base mt-2">{email}</div>
                 )}
               </div>
             </div>

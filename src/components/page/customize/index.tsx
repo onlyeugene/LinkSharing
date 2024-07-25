@@ -160,6 +160,7 @@ const CustomizeLinks: NextPage = () => {
       GitHub: /^https:\/\/github\.com\/.+/,
       LinkedIn: /^https:\/\/(www\.)?linkedin\.com\/in\/.+/,
       Twitter: /^https:\/\/twitter\.com\/.+/,
+      Fcaebook: /^https:\/\/facebook\.com\/.+/,
       YouTube: /^https:\/\/(www\.)?youtube\.com\/(channel|user)\/.+/,
     };
     return regexes[platform]?.test(url) ?? false;
@@ -391,7 +392,7 @@ const CustomizeLinks: NextPage = () => {
                             <div
                               key={platform}
                               onClick={() => selectPlatform(index, platform)}
-                              className="cursor-pointer px-4 py-2 hover:bg-gray-200 flex items-center gap-2 active:text-secondary"
+                              className="cursor-pointer px-4 py-2 hover:bg-gray-200 flex items-center gap-2 active:text-secondary border-b"
                             >
                               {platformImages[platform] && (
                                 <Image
