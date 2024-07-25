@@ -112,7 +112,7 @@ const DesktopPage: React.FC = () => {
         email={email}
         links={[]} // Pass your links here if you have any
       />
-      <div className="max-w-4xl my-[2rem]  bg-white shadow-md rounded-lg p-8">
+      <div className="max-w-7xl my-[2rem]  bg-white shadow-md rounded-lg p-8">
         <h1 className="text-black sm:text-[32px] text-2xl font-bold">Profile Details</h1>
         <h2 className="text-dark-gray text-base mt-2">
           Add your details to create a personal touch to your profile

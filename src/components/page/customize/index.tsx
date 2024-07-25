@@ -260,7 +260,7 @@ const CustomizeLinks: NextPage = () => {
 
   return (
     <>
-      <div className="flex bg-primary">
+      <div className="flex bg-primary justify-center">
         <MainLayout
           links={links.map((link, index) => ({
             platform: link.platform,
@@ -272,7 +272,7 @@ const CustomizeLinks: NextPage = () => {
           <Head>
             <title>Customize Links</title>
           </Head>
-          <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-12">
+          <div className="max-w-7xl mx-auto bg-white shadow-md rounded-lg p-12">
             <h1 className="sm:text-[32px] text-2xl font-bold mb-4 text-black">
               Customize your links
             </h1>

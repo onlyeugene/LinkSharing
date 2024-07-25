@@ -76,7 +76,7 @@ const Signup = () => {
             toast.error('Invalid email address');
             break;
           case 'auth/weak-password':
-            toast.error('Password should be at least 6 characters');
+            toast.error('Please check again');
             break;
           case 'auth/email-already-in-use':
             toast.error('Email already in use');
