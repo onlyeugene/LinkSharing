@@ -104,7 +104,7 @@ const DesktopPage: React.FC = () => {
   };
 
   return (
-    <div className="lg:flex  bg-primary ">
+    <div className="lg:flex justify-center bg-primary ">
       <MainLayout
         profilePicture={profilePicture || undefined}
         firstName={firstName}
