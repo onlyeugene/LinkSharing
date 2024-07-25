@@ -100,7 +100,7 @@ const Signup = () => {
       <div className="border bg-white flex flex-col gap-2 sm:w-[476px] sm:h-auto sm:p-10 px-5 py-[2rem] rounded-md border-white">
         <h2 className="sm:text-[32px] text-2xl font-bold">Create account</h2>
         <h3 className="text-base text-gray">
-          `Let's get you started sharing your links!`
+        Let&apos;s get you started sharing your links!
         </h3>
 
         <form

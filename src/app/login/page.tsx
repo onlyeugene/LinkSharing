@@ -154,7 +154,7 @@ const Login = () => {
 
         <div className="text-center text-base mt-5">
           <h1 className="flex sm:flex-row justify-center items-center flex-col">
-            `Don't have an account?&nbsp;`
+          Don&apos;t have an account?&nbsp;
             <Link href={'/register'} className="text-secondary">
               Create account
             </Link>
