@@ -6,7 +6,7 @@ import MainLayout from '../mainlayout';
 import upload from '../../../../public/assets/upload.svg';
 import change from '../../../../public/assets/change.svg';
 import { db, auth, storage } from '@/app/firebase/config';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { toast, Toaster } from 'react-hot-toast';
@@ -15,6 +15,13 @@ interface FormData {
   firstName: string;
   lastName: string;
   email: string;
+}
+
+interface UserLink {
+  id: string;
+  userId: string;
+  platform: string;
+  url: string;
 }
 
 const DesktopPage: React.FC = () => {
@@ -30,6 +37,7 @@ const DesktopPage: React.FC = () => {
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [links, setLinks] = useState<UserLink[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -50,7 +58,21 @@ const DesktopPage: React.FC = () => {
           setEmail(profileData.email || '');
         }
       };
+
+      const fetchLinks = async () => {
+        const linksRef = collection(db, 'links');
+        const q = query(linksRef, where('userId', '==', user.uid));
+        const querySnapshot = await getDocs(q);
+        const userLinks: UserLink[] = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          userLinks.push({ id: doc.id, ...data } as UserLink);
+        });
+        setLinks(userLinks);
+      };
+
       fetchProfile();
+      fetchLinks();
     }
   }, [user, setValue]);
 
@@ -89,7 +111,6 @@ const DesktopPage: React.FC = () => {
           imageUrl,
         });
 
-        // Update local state
         setFirstName(data.firstName);
         setLastName(data.lastName);
         setEmail(data.email);
@@ -104,16 +125,16 @@ const DesktopPage: React.FC = () => {
   };
 
   return (
-    <div className="lg:flex sm:px-0 lg:py-0 sm:py-1 py-4 px-[1rem] justify-center bg-primary ">
+    <div className="lg:flex sm:px-0 lg:py-0 sm:py-1 py-4 px-[1rem] justify-center bg-primary">
       <MainLayout
         profilePicture={profilePicture || undefined}
         firstName={firstName}
         lastName={lastName}
         email={email}
-        links={[]} // Pass your links here if you have any
+        links={links}
       />
-      <div className="sm:my-[4rem] my-[rem] sm:mx-5 w-full px-8 py-6 bg-white shadow-md rounded-lg  relative">
-        <div className='border-b absolute border-[#D9D9D9] bottom-[8rem] left-0  w-[100%] overflow-hidden'/>
+      <div className="sm:my-[4rem] my-[1rem] sm:mx-5 w-full px-8 py-6 bg-white shadow-md rounded-lg relative">
+        <div className='border-b absolute border-[#D9D9D9] bottom-[8rem] left-0 w-[100%] overflow-hidden' />
         <h1 className="text-black sm:text-[32px] text-2xl font-bold">Profile Details</h1>
         <h2 className="text-dark-gray text-base mt-2">
           Add your details to create a personal touch to your profile
@@ -122,18 +143,18 @@ const DesktopPage: React.FC = () => {
           <h3 className="text-base text-dark-gray">Profile picture</h3>
           <div className="flex sm:flex-row flex-col sm:items-center items-start gap-10">
             <div
-              className="border border-purple bg-purple sm:py-[1rem] py-[3rem] sm:px-[2rem] px-[1.5rem]  rounded-md flex flex-col items-center cursor-pointer"
+              className="border border-purple bg-purple sm:py-[1rem] py-[3rem] sm:px-[2rem] px-[1.5rem] rounded-md flex flex-col items-center cursor-pointer"
               onClick={handleUploadClick}
               style={{
                 backgroundImage: selectedFile ? `url(${profilePicture})` : ``,
                 backgroundSize: 'cover',
-                backgroundPosition: 'center'
+                backgroundPosition: 'center',
               }}
             >
               <Image
                 src={selectedFile ? change : upload}
                 alt={selectedFile ? "change" : "upload"}
-                className="mb-2" // Add margin if needed
+                className="mb-2"
               />
               <h4 className={`font-semibold ${selectedFile ? 'text-white' : 'text-secondary'}`}>
                 {selectedFile ? 'Change Image' : '+ Upload Image'}
@@ -147,7 +168,7 @@ const DesktopPage: React.FC = () => {
               />
             </div>
             <h5 className="text-xs text-dark-gray">
-              Image must be below 1024x1024px.<br className='sm:block hidden'/>Use PNG <br className='sm:hidden block'/> or JPG format.
+              Image must be below 1024x1024px.<br className='sm:block hidden' />Use PNG <br className='sm:hidden block' /> or JPG format.
             </h5>
           </div>
         </div>
@@ -156,9 +177,9 @@ const DesktopPage: React.FC = () => {
             <p>Selected file: {selectedFile.name}</p>
           </div>
         )}
-        <form onSubmit={handleSubmit(onSubmit)} className="">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="border mt-[2rem] rounded-md border-primary py-[2rem] px-[1rem] flex flex-col gap-[.5rem] bg-primary items-center">
-            <div className="sm:flex gap-[rem] w-full relative">
+            <div className="sm:flex gap-[1rem] w-full relative">
               <label
                 htmlFor="firstName"
                 className="w-full text-dark-gray sm:text-base text-xs"
@@ -172,10 +193,10 @@ const DesktopPage: React.FC = () => {
                 className="w-full rounded-md py-2 border px-[.7rem] border-light-gray text-base outline-none font-normal text-black"
               />
               {errors.firstName && (
-                <span className="text-red-500 absolute top-3 px-4 right-0 text-red text-xs">{errors.firstName.message}</span>
+                <span className="text-red-500 absolute top-3 px-4 right-0 text-xs">{errors.firstName.message}</span>
               )}
             </div>
-            <div className="sm:flex gap-[rem] w-full relative">
+            <div className="sm:flex gap-[1rem] w-full relative">
               <label
                 htmlFor="lastName"
                 className="w-full text-dark-gray sm:text-base text-xs"
@@ -189,10 +210,10 @@ const DesktopPage: React.FC = () => {
                 className="w-full rounded-md py-2 border px-[.7rem] border-light-gray text-base outline-none text-black"
               />
               {errors.lastName && (
-                <span className="text-red absolute top-3 right-0 px-4 text-xs">{errors.lastName.message}</span>
+                <span className="text-red-500 absolute top-3 px-4 right-0 text-xs">{errors.lastName.message}</span>
               )}
             </div>
-            <div className="sm:flex gap-[rem] w-full">
+            <div className="sm:flex gap-[1rem] w-full relative">
               <label
                 htmlFor="email"
                 className="w-full text-dark-gray sm:text-base text-xs"
@@ -211,7 +232,7 @@ const DesktopPage: React.FC = () => {
                 className="w-full rounded-md py-2 border px-[.7rem] border-light-gray text-base outline-none text-black"
               />
               {errors.email && (
-                <span className="text-red-500">{errors.email.message}</span>
+                <span className="text-red-500 absolute top-3 px-4 right-0 text-xs">{errors.email.message}</span>
               )}
             </div>
           </div>

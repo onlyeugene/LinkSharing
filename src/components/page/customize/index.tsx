@@ -15,6 +15,7 @@ import {
   where,
   updateDoc,
   doc,
+  getDoc,
 } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -59,6 +60,10 @@ const CustomizeLinks: NextPage = () => {
     {}
   );
   const [showPlaceholder, setShowPlaceholder] = useState<boolean>(true);
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
+  const [firstName, setFirstName] = useState<string | null>(null);
+  const [lastName, setLastName] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
   const [validationPerformed, setValidationPerformed] = useState<boolean>(false);
   const router = useRouter();
 
@@ -94,6 +99,33 @@ const CustomizeLinks: NextPage = () => {
   useEffect(() => {
     fetchLinks();
   }, [fetchLinks]);
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      if (user) {
+        try {
+          const profileDocRef = doc(db, 'profiles', user.uid);
+          const profileDocSnap = await getDoc(profileDocRef);
+
+          if (profileDocSnap.exists()) {
+            const profileData = profileDocSnap.data() as {
+              imageUrl?: string;
+              email?: string;firstName?: string;
+              lastName?: string;
+            };
+            setProfilePicture(profileData.imageUrl || null);
+            setEmail(profileData.email ?? null);
+            setFirstName(profileData.firstName ?? null);
+            setLastName(profileData.lastName ?? null);
+          }
+        } catch (err) {
+          console.error('Error fetching profile data:', err);
+        }
+      }
+    };
+
+    fetchProfileData();
+  }, [user]);
+
 
   useEffect(() => {
     if (!loading && !user) {
@@ -237,7 +269,7 @@ const CustomizeLinks: NextPage = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-20 w-20 border-t-4 border-b-2 border-[#633CFF]"></div>
+        <div className="animate-spin border-[2px] rounded-full h-20 w-20 border-[#633CFF] relative"> <span className='rounded-full absolute top-0 right-0 border w-5 h-5 bg-black border-black'></span></div>
       </div>
     );
   }
@@ -245,14 +277,14 @@ const CustomizeLinks: NextPage = () => {
   if (error || !user) {
     return (
       <div className="text-center flex flex-col items-center justify-center min-h-screen">
-        <div className="animate-spin flex justify-center items-center rounded-full h-20 w-20 border-t-4 border-b-2 border-[#b32828]"></div>
+        <div className="animate-spin border-[2px] rounded-full h-20 w-20 border-[#633CFF] relative"> <span className='rounded-full absolute top-0 right-0 border w-5 h-5 bg-black border-black'></span></div>
 
         <p className="text-gray-700 mt-4">Please log in to continue.</p>
 
         <Link href="/login" legacyBehavior>
-          <a className="text-[#b32828] underline mt-2 font-medium">
+          <p className="text-[#b32828] underline mt-2 font-medium">
             Go to Login Page
-          </a>
+          </p>
         </Link>
       </div>
     );
@@ -262,6 +294,10 @@ const CustomizeLinks: NextPage = () => {
     <>
       <div className="lg:flex sm:px-0 lg:py-0 sm:py-1 py-4 px-[1rem] bg-primary justify-center">
         <MainLayout
+          profilePicture={profilePicture || undefined}
+          email={email || undefined}
+          firstName={firstName|| undefined}
+          lastName={lastName || undefined}
           links={links.map((link, index) => ({
             platform: link.platform,
             url: urls[index] || platformDefaultUrls[link.platform] || '',
