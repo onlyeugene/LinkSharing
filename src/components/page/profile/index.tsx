@@ -104,7 +104,7 @@ const DesktopPage: React.FC = () => {
   };
 
   return (
-    <div className="lg:flex justify-center bg-primary ">
+    <div className="lg:flex sm:px-0 lg:py-0 sm:py-1 py-4 px-[1rem] justify-center bg-primary ">
       <MainLayout
         profilePicture={profilePicture || undefined}
         firstName={firstName}
@@ -112,7 +112,8 @@ const DesktopPage: React.FC = () => {
         email={email}
         links={[]} // Pass your links here if you have any
       />
-      <div className="max-w-7xl my-[2rem]  bg-white shadow-md rounded-lg p-8">
+      <div className="sm:my-[4rem] my-[rem] sm:mx-5 w-full px-8 py-6 bg-white shadow-md rounded-lg  relative">
+        <div className='border-b absolute border-[#D9D9D9] bottom-[8rem] left-0  w-[100%] overflow-hidden'/>
         <h1 className="text-black sm:text-[32px] text-2xl font-bold">Profile Details</h1>
         <h2 className="text-dark-gray text-base mt-2">
           Add your details to create a personal touch to your profile
@@ -214,12 +215,14 @@ const DesktopPage: React.FC = () => {
               )}
             </div>
           </div>
-          <button
-            type="submit"
-            className="text-right border py-2 px-7 mt-[5rem] border-t rounded-md text-white bg-secondary"
-          >
-            Save
-          </button>
+          <div className='w-full text-right'>
+            <button
+              type="submit"
+              className="sm:w-[7rem] w-full border py-2 px-7 mt-[5rem] border-t rounded-md text-white bg-secondary"
+            >
+              Save
+            </button>
+          </div>
         </form>
         <Toaster position="top-right" reverseOrder={false} />
       </div>

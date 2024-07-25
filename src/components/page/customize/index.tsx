@@ -260,7 +260,7 @@ const CustomizeLinks: NextPage = () => {
 
   return (
     <>
-      <div className="flex bg-primary justify-center">
+      <div className="lg:flex sm:px-0 lg:py-0 sm:py-1 py-4 px-[1rem] bg-primary justify-center">
         <MainLayout
           links={links.map((link, index) => ({
             platform: link.platform,
@@ -268,11 +268,12 @@ const CustomizeLinks: NextPage = () => {
           }))}
         />
 
-        <div className="bg-gray-100 p-5 w-full h-full">
+        <div className="sm:my-[4rem] my-[rem] sm:mx-5 w-full px-8 py-6 bg-white shadow-md rounded-lg  relative">
           <Head>
             <title>Customize Links</title>
           </Head>
-          <div className="max-w-7xl mx-auto bg-white shadow-md rounded-lg p-12">
+          <div className='border-b absolute border-[#D9D9D9] bottom-[5rem] left-0 w-full overflow-hidden'/>
+          <div className="">
             <h1 className="sm:text-[32px] text-2xl font-bold mb-4 text-black">
               Customize your links
             </h1>
@@ -286,7 +287,6 @@ const CustomizeLinks: NextPage = () => {
             >
               + Add new link
             </button>
-
             <div className="h-[27rem] overflow-y-auto">
               {showPlaceholder && links.length === 0 && (
                 <section className="self-stretch rounded-xl bg-[#fafafa] overflow-hidden flex flex-col items-center justify-center py-[62.5px] px-5 box-border max-w-full">
@@ -397,15 +397,18 @@ const CustomizeLinks: NextPage = () => {
               ))}
             </div>
 
-            <hr className="mt-5" />
+            {/* <hr className="mt-5" /> */}
 
-            <div className="mt-2 text-right">
+            <div className="mt-14 text-right">
               <button
-                onClick={saveLinks}
-                className="px-4 py-2 bg-[#633CFF] text-white font-bold rounded"
-              >
-                Save
-              </button>
+              onClick={saveLinks}
+              className={`mt-4 w-full p-2 rounded-md sm:w-[7rem] px-4 py-2 text-white font-bold ${
+                links.length === 0 ? 'bg-tertiary cursor-not-allowed' : 'bg-secondary  text-white'
+              }`}
+              disabled={links.length === 0}
+            >
+              Save
+            </button>
             </div>
           </div>
           <Toaster position="top-right" reverseOrder={false} />
